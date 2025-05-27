@@ -41,6 +41,7 @@
             picDisplay.Size = new Size(776, 426);
             picDisplay.TabIndex = 0;
             picDisplay.TabStop = false;
+            picDisplay.Paint += picDisplay_Paint;
             picDisplay.MouseMove += picDisplay_MouseMove;
             // 
             // timer1
@@ -57,7 +58,7 @@
             Controls.Add(picDisplay);
             Name = "Form1";
             Text = "Form1";
-            Load += Form1_Load;
+            Load += timer1_Tick;
             ((System.ComponentModel.ISupportInitialize)picDisplay).EndInit();
             ResumeLayout(false);
         }

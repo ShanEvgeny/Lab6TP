@@ -1,8 +1,14 @@
+using System.Numerics;
+using Лаб6ТП.Objects;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+
 namespace Лаб6ТП
 {
     public partial class Form1 : Form
     {
         Emitter emitter;
+        CometEmmiter cometEmmiter;
+        List<Comet> objects = new ();
         public Form1()
         {
             InitializeComponent();
@@ -20,18 +26,36 @@ namespace Лаб6ТП
                 GravitationX = 0.25f
             };
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
         private void timer1_Tick(object sender, EventArgs e)
         {
             emitter.UpdateState();
             using (var g = Graphics.FromImage(picDisplay.Image))
             {
                 g.Clear(Color.Black);
-                emitter.Render(g);
+                //emitter.Render(g);
+                var is_spawn = new Random().Next(100);
+                if (is_spawn <= 5 && objects.Count < 5)
+                {
+                    Comet newComet = new Comet(-20, new Random().Next(50, this.Height - 80), 0);
+                    objects.Add(newComet);
+                }
+                foreach (var obj in objects.ToList())
+                {
+                    //updateComet((Comet)obj);
+                    //obj.Render(g);
+                    var comet = (Comet)obj;
+                    comet.Update();
+                    if (comet.X > picDisplay.Width)
+                    {
+                        comet.X = -20;
+                        comet.Y = new Random().Next(picDisplay.Height);
+                    }
+                }
+                foreach (var obj in objects)
+                {
+                    g.Transform = obj.GetTransform();
+                    obj.Render(g);
+                }
             }
             picDisplay.Invalidate();
         }
@@ -39,6 +63,28 @@ namespace Лаб6ТП
         {
             emitter.MousePositionX = e.X;
             emitter.MousePositionY = e.Y;
+        }
+
+        private void picDisplay_Paint(object sender, PaintEventArgs e)
+        {
+            //var g = e.Graphics;
+            //g.Clear(Color.Black);
+            
+        }
+        private void updateComet(Comet comet)
+        {
+            comet.Update();
+            if (comet.X > picDisplay.Width)
+            {
+                comet.X = -20;
+                comet.Y = new Random().Next(picDisplay.Height);
+            }
+            //if (comet.X == picDisplay.Width - 50)
+            //{
+                //comet.X = 0;
+                //comet.Y = new Random().Next(picDisplay.Height);
+            //}
+            //comet.X += 5;
         }
     }
 }

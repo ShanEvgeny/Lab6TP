@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using Лаб6ТП.Objects;
 
 namespace Лаб6ТП
 {
@@ -44,7 +46,12 @@ namespace Лаб6ТП
                     //particle.X = MousePositionX;
                     //particle.Y = MousePositionY;
                     ResetParticle(particle);
+                    var particleComet = new ParticleColorful();
+                    particleComet.FromColor = Color.LightBlue;
+                    particleComet.ToColor = Color.FromArgb(0, Color.White);
+                    ResetParticle(particleComet);
                     particles.Add(particle);
+                    particles.Add(particleComet);
                 }
                 else
                 {
@@ -76,7 +83,7 @@ namespace Лаб6ТП
     public class LeftEmitter : Emitter
     {
         public int Width;
-
+        //public int ParticleCount = 50;
         public override void ResetParticle(Particle particle)
         {
             base.ResetParticle(particle);
@@ -86,6 +93,34 @@ namespace Лаб6ТП
 
             particle.SpeedY = Particle.rand.Next(-2,2);//поменять на 0 за игры
             particle.SpeedX = 1; 
+        }
+    }
+    public class CometEmmiter : Emitter
+    {
+        //public float GravitationX = -1;
+        //public float GravitationY = 0;
+        public Comet comet;
+        //public int ParticleCount = 50;
+        public CometEmmiter(Comet comet)
+        {
+           this.comet = comet;
+           this.ParticlesCount = 150;
+           this.GravitationX = -1;
+           this.GravitationY = 0;
+        }
+        public override void ResetParticle(Particle particle)
+        {
+            base.ResetParticle(particle);
+            particle.X = comet.X + comet.diametr/2;
+            particle.Y = comet.Y;
+            var direction = (double)Particle.rand.Next(360);
+            var speed = 5;
+            //particle.SpeedX = (float)(Math.Cos(direction / 180 * Math.PI) * speed);
+            //particle.SpeedY = -(float)(Math.Sin(direction / 180 * Math.PI) * speed);
+            particle.Radius = 1 + Particle.rand.Next(5);
+            particle.Life = 10 + Particle.rand.Next(30);
+            particle.SpeedY = Particle.rand.Next(-2, 2);//поменять на 0 за игры
+            particle.SpeedX = (float)0.5;
         }
     }
 
